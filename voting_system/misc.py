@@ -1,6 +1,6 @@
 from .models import *
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from django.core.mail import send_mail
 
@@ -24,6 +24,30 @@ def is_first_time_voter(poll:Poll, voter:Voter):
     return len(voting_list) == 0
 
 def is_OTP_expired(confirmation: Confirmation):
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
     date_created = confirmation.created_at
-    return now - date_created < timedelta(minutes=10)
+    return now - date_created > timedelta(minutes=10)
+
+def deactivate_OTP(confirmation: Confirmation):
+    confirmation.isActive = False
+    confirmation.save()
+    return True
+
+def is_Poll_expired(poll: Poll):
+    now = datetime.now(timezone.utc)
+    expiry_date = poll.exp_date
+    return now > expiry_date
+
+def is_OTP_active(confirmation: Confirmation):
+    return confirmation.isActive
+
+def check_email_otp(confirmation: Confirmation, voter:Voter):
+    return confirmation.voter.email == voter.email
+
+def get_Voter(email):
+    v_list = Voter.objects.filter(email=email)
+    if len(v_list) == 0:
+        v = Voter(email=email)
+        v.save()
+        return v
+    return v_list[0]

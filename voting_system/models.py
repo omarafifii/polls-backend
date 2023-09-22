@@ -21,7 +21,7 @@ class Choice(models.Model):
         return self.text
     
 class Voter(models.Model):
-    email = models.EmailField(max_length=200)
+    email = models.EmailField(max_length=200,unique=True)
     polls = models.ManyToManyField(Poll, blank=True)
 
     def __str__(self):
