@@ -22,7 +22,7 @@ class Choice(models.Model):
     
 class Voter(models.Model):
     email = models.EmailField(max_length=200)
-    polls = models.ManyToManyField(Poll)
+    polls = models.ManyToManyField(Poll, blank=True)
 
     def __str__(self):
         return self.email
@@ -34,4 +34,4 @@ class Confirmation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.voter
+        return self.otp

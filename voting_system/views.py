@@ -7,8 +7,6 @@ from .serializers import PollSerializer, ChoiceSerializer
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 
-from django.core.mail import send_mail
-
 from .models import Poll, Choice
 
 # Create your views here.
@@ -37,7 +35,5 @@ def search(request,key):
 
 @api_view(['GET'])
 def sendEmail(request):
-	# send_mail("test sub", "test message", "omar@omar.com","ahmed@ahmed.com",fail_silently=False)
-	send_mail(subject="test sub", message="test message", from_email="omar@omar.com", recipient_list=["ahmed@ahmed.com"],fail_silently=False)
 	print("sent")
 	return Response()
