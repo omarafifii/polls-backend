@@ -12,3 +12,10 @@ run this command in a new shell:
 ```bash
 $ python -m aiosmtpd -n -l localhost:8025
 ```
+
+### To install dependancies
+
+run this command in a new shell:
+```bash
+$ pip install -r requirements.txt
+```
