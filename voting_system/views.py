@@ -18,10 +18,10 @@ from .models import *
 def getPolls(request):
 	polls = Poll.objects.all()
 	serial_polls = PollSerializer(polls, many=True)
-	if(request.body):
-		json_data = json.loads(request.body)
-		items_per_page = json_data['items_per_page']
-		current_page = json_data['current_page']
+	query = request.query_params
+	if(len(query) > 0):
+		items_per_page = query['items_per_page']
+		current_page = query['current_page']
 		p = Paginator(polls, items_per_page)
 		number_of_pages = p.num_pages
 		return Response({
@@ -41,14 +41,13 @@ def getPollChoices(request,pk):
 	return Response(serial_choices.data)
 
 @api_view(['GET'])
-# def search(request,key):
 def search(request,key):
 	polls = Poll.objects.filter(Q(title__icontains=key) | Q(description__icontains=key) | Q(choice__text__icontains=key)).distinct()
 	serial_polls = PollSerializer(polls, many=True)
-	if(request.body):
-		json_data = json.loads(request.body)
-		items_per_page = json_data['items_per_page']
-		current_page = json_data['current_page']
+	query = request.query_params
+	if(len(query) > 0):
+		items_per_page = query['items_per_page']
+		current_page = query['current_page']
 		p = Paginator(polls, items_per_page)
 		number_of_pages = p.num_pages
 		return Response({
@@ -60,9 +59,11 @@ def search(request,key):
 @api_view(['POST'])
 def vote(request):
 	try:
-		json_data = json.loads(request.body)
-		email = json_data['email']
-		choice_id = json_data['choice_id']
+		# json_data = json.loads(request.body)
+		# email = json_data['email']
+		# choice_id = json_data['choice_id']
+		email = request.data['email']
+		choice_id = request.data['choice_id']
 	except:
 		return Response({"error": "Missing data"}, status=400)
 	voter = get_Voter(email)
@@ -92,10 +93,9 @@ def vote(request):
 @api_view(['POST'])
 def confirm(request):
 	try:
-		json_data = json.loads(request.body)
-		email = json_data['email']
-		choice_id = json_data['choice_id']
-		otp = json_data['otp']
+		email = request.data['email']
+		choice_id = request.data['choice_id']
+		otp = request.data['otp']
 	except:
 		return Response({"error": "Missing data"}, status=400)
 	voter = get_Voter(email)
@@ -121,6 +121,7 @@ def confirm(request):
 		return Response({"error": "OTP expired"}, status=400)
 
 	increment_vote(choice)
+	voter.polls.add(poll)
 	deactivate_old_otp(voter)
 	
 	return Response("Voted Successfully")
