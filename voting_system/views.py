@@ -25,7 +25,8 @@ def getPolls(request):
 		p = Paginator(polls, items_per_page)
 		number_of_pages = p.num_pages
 		return Response({
-			"number_of_pages": "{}".format(number_of_pages),
+			"number_of_pages": number_of_pages,
+			# "number_of_pages": "{}".format(number_of_pages),
 			"data": PollSerializer((p.page(current_page).object_list), many=True).data
 			})
 	return Response(serial_polls.data)
@@ -51,7 +52,8 @@ def search(request,key):
 		p = Paginator(polls, items_per_page)
 		number_of_pages = p.num_pages
 		return Response({
-			"number_of_pages": "{}".format(number_of_pages),
+			"number_of_pages": number_of_pages,
+			# "number_of_pages": "{}".format(number_of_pages),
 			"data": PollSerializer((p.page(current_page).object_list), many=True).data
 			})
 	return Response(serial_polls.data)
