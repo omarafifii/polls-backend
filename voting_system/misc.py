@@ -9,7 +9,7 @@ from django.core.mail import send_mail
 def send_Email(otp, receipient):
     receiving_list = [receipient]
     message = "This is your OTP: {}".format(otp)
-    send_mail(subject="This is your OTP", message=message, from_email="voting@voting.com", recipient_list=receiving_list,fail_silently=False)
+    send_mail(subject="This is your OTP", message=message, from_email="voting@omarafifi.com", recipient_list=receiving_list,fail_silently=False)
     return True
 
 def generate_OTP():
