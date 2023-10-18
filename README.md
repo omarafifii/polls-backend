@@ -6,7 +6,7 @@ This repo is the backend for a voting app written in react. When the user opens 
 
 Deployment: https://voting-backend.omarafifi.com/
 
-Backend Github: https://github.com/omarafifii/polls-frontend
+Frontend Github: https://github.com/omarafifii/polls-frontend
 
 ### To access admin panel
 
