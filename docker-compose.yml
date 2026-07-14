@@ -1,0 +1,26 @@
+services:
+  polls-backend:
+    build: .
+    image: polls-backend:latest
+    container_name: polls-backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - DB_PATH=/data/db.sqlite3
+    volumes:
+      - polls-backend-data:/data
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.polls-backend.rule=Host(`voting-backend.omarafifi.com`)"
+      - "traefik.http.routers.polls-backend.entrypoints=websecure"
+      - "traefik.http.routers.polls-backend.tls.certresolver=le"
+      - "traefik.http.services.polls-backend.loadbalancer.server.port=8000"
+
+networks:
+  web:
+    external: true
+
+volumes:
+  polls-backend-data:

@@ -1,0 +1,15 @@
+.git
+.gitignore
+.env
+.env.*
+!.env_template
+__pycache__
+*.pyc
+*.pyo
+.venv
+venv
+staticfiles
+.DS_Store
+.idea
+.vscode
+*.md
