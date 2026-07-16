@@ -87,7 +87,17 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = env('CORS_ALLOWED_ORIGINS')
 
-CSRF_TRUSTED_ORIGINS = [o for o in CORS_ALLOWED_ORIGINS if o.startswith('https://')]
+# CSRF trusted origins: include the backend's own HTTPS origins (for /admin/ POSTs)
+# plus any HTTPS origins from CORS_ALLOWED_ORIGINS.
+CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(
+    env.list('CSRF_TRUSTED_ORIGINS', default=[]) +
+    [f'https://{h}' for h in ALLOWED_HOSTS if h not in ('*', 'localhost', '127.0.0.1')] +
+    [o for o in CORS_ALLOWED_ORIGINS if o.startswith('https://')]
+))
+
+# Trust the X-Forwarded-Proto header set by Traefik so Django knows requests are HTTPS.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
